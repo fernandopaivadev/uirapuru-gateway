@@ -1,0 +1,30 @@
+{
+    "editor.fontFamily": "Fira Code",
+    "editor.formatOnPaste": true,
+    "editor.formatOnSave": true,
+    "workbench.editor.highlightModifiedTabs": true,
+    "files.autoSave": "onFocusChange",
+    "explorer.sortOrder": "type",
+    "eslint.alwaysShowStatus": true,
+    "eslint.codeActionsOnSave.mode": "all",
+    "javascript.validate.enable": false,
+
+    "editor.cursorStyle": "block",
+    "editor.cursorBlinking": "smooth",
+    "spellright.language": ["en"],
+    "spellright.documentTypes": ["markdown", "latex", "plaintext"],
+
+    "[javascript]": {
+        "editor.defaultFormatter": "esbenp.prettier-vscode"
+    },
+    "[json]": {
+        "editor.defaultFormatter": "vscode.json-language-features"
+    },
+
+    "editor.rulers": [{
+        "column": 80,
+        "color": "#5500aa"
+    }],
+    "editor.fontLigatures": true,
+    "editor.fontSize": 18
+}
