@@ -63,6 +63,7 @@ parser.on('data', data => {
         const dataObject = JSON.parse(data)
         const { id } = dataObject
         delete dataObject.id
+        dataObject.rtc = new Date()
         const payload = JSON.stringify(dataObject)
         console.log(payload)
         client.publish(id, payload)
