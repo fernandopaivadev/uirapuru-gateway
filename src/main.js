@@ -11,9 +11,9 @@ exec('sudo wvdial')
     process.env.MQTT_CONFIG
 )*/
 
-const username = "rmydskjv"
-const password = "HeEapqQBfdJ7"
-const host = "mqtt://m10.cloudmqtt.com"
+const username = 'rmydskjv'
+const password = 'HeEapqQBfdJ7'
+const host = 'mqtt://m10.cloudmqtt.com'
 const port = 11897
 
 const client = connect(host, {
@@ -25,7 +25,7 @@ const client = connect(host, {
 })
 
 client.on('connect', () => {
-    client.publish('gateway','connected')
+    client.publish('gateway', 'connected')
     console.log('MQTT: CONNECTED\n')
 })
 
@@ -45,7 +45,7 @@ exec('sudo chmod 666 /dev/ttyS0')
 
 const serialport = new serialPort('/dev/ttyS0', {
     baudRate: 9600,
-    autoOpen: false
+    autoOpen: false,
 })
 
 serialport.open(err => {
@@ -56,18 +56,22 @@ serialport.on('open', () => {
     console.log('\nRADIO: SERIAL PORT OPEN\n')
 })
 
-const parser = serialport.pipe(new Readline({ delimiter: '\n'}))
+const parser = serialport.pipe(new Readline({ delimiter: '\n' }))
 
 parser.on('data', data => {
     try {
         const dataObject = JSON.parse(data)
         const { id } = dataObject
         delete dataObject.id
+        const rtc = new Date.now()
+
+        dataObject.rtc = rtc
+
         const payload = JSON.stringify(dataObject)
         console.log(payload)
+
         client.publish(id, payload)
-        //exec('sudo chmod 666 /dev/ttyS0')
-    } catch(err) {
+    } catch (err) {
         console.log(err.message)
     }
 })
