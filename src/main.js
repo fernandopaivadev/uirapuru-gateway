@@ -1,4 +1,3 @@
-//import { config } from 'dotenv'
 import { connect } from 'mqtt'
 import serialPort from 'serialport'
 const Readline = require('@serialport/parser-readline')
