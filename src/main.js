@@ -3,18 +3,17 @@ import { connect } from 'mqtt'
 import serialPort from 'serialport'
 const Readline = require('@serialport/parser-readline')
 import { exec } from 'child_process'
+import fs from 'fs'
+import { config } from 'dotenv'
 
-//config()
+config()
 exec('sudo wvdial')
 
-/*const { username, password, host, port, reconnectPeriod } = JSON.parse(
-    process.env.MQTT_CONFIG
-)*/
+fs.appendFile('data.txt', 'STORAGE_BEGIN\n', err => {
+    console.log(`CREATE FILE ERROR: ${err?.message}`)
+})
 
-const username = 'rmydskjv'
-const password = 'HeEapqQBfdJ7'
-const host = 'mqtt://m10.cloudmqtt.com'
-const port = 11897
+const { username, password, host, port } = JSON.parse(process.env.MQTT_CONFIG)
 
 const client = connect(host, {
     username,
@@ -71,6 +70,10 @@ parser.on('data', data => {
         console.log(payload)
 
         client.publish(id, payload)
+
+        fs.appendFile('data.txt', `${payload}\n`, err => {
+            console.log(`APPEND FILE ERROR: ${err?.message}`)
+        })
     } catch (err) {
         console.log(err.message)
     }
