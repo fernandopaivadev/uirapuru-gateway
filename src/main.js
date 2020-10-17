@@ -1,6 +1,6 @@
 import { connect } from 'mqtt'
 import serialPort from 'serialport'
-const Readline = require('@serialport/parser-readline')
+import Readline from '@serialport/parser-readline'
 import { exec } from 'child_process'
 import fs from 'fs'
 import { config } from 'dotenv'
