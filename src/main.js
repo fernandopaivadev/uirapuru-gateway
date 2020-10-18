@@ -6,7 +6,7 @@ import fs from 'fs'
 import { config } from 'dotenv'
 
 config()
-exec('sudo wvdial')
+// exec('sudo wvdial')
 
 fs.appendFile('data.txt', 'STORAGE_BEGIN\n', err => {
     console.log(`CREATE FILE ERROR: ${err?.message}`)
@@ -61,9 +61,7 @@ parser.on('data', data => {
         const dataObject = JSON.parse(data)
         const { id } = dataObject
         delete dataObject.id
-        const rtc = Date.now()
-
-        dataObject.rtc = rtc
+        dataObject.rtc = new Date()
 
         const payload = JSON.stringify(dataObject)
         console.log(payload)
