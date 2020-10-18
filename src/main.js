@@ -61,7 +61,7 @@ parser.on('data', data => {
         const dataObject = JSON.parse(data)
         const { id } = dataObject
         delete dataObject.id
-        const rtc = new Date.now()
+        const rtc = Date.now()
 
         dataObject.rtc = rtc
 
