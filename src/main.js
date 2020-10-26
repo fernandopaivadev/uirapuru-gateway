@@ -1,77 +1,94 @@
-import { connect } from 'mqtt'
+// import { connect } from 'mqtt'
 import serialPort from 'serialport'
 import Readline from '@serialport/parser-readline'
 import { exec } from 'child_process'
 import fs from 'fs'
-import { config } from 'dotenv'
+// import { config } from 'dotenv'
 
-config()
+// config()
 // exec('sudo wvdial')
 
-fs.appendFile('data.txt', 'STORAGE_BEGIN\n', err => {
+fs.appendFile('data.txt', '\n', err => {
     console.log(`CREATE FILE ERROR: ${err?.message}`)
 })
 
-const { username, password, host, port } = JSON.parse(process.env.MQTT_CONFIG)
+// const { username, password, host, port } = JSON.parse(process.env.MQTT_CONFIG)
 
-const client = connect(host, {
-    username,
-    password,
-    port,
-    clean: true,
-    keepalive: 1,
-})
+// const client = connect(host, {
+//     username,
+//     password,
+//     port,
+//     clean: true,
+//     keepalive: 1,
+// })
 
-client.on('connect', () => {
-    client.publish('gateway', 'connected')
-    console.log('MQTT: CONNECTED\n')
-})
+// client.on('connect', () => {
+//     client.publish('gateway', 'connected')
+//     console.log('MQTT: CONNECTED\n')
+// })
 
-client.on('error', err => {
-    console.log(`MQTT: ERROR CONNECTING: ${err.message}`)
-})
+// client.on('error', err => {
+//     console.log(`MQTT: ERROR CONNECTING: ${err.message}`)
+// })
 
-client.on('close', () => {
-    console.log('MQTT: DISCONNECTED')
-})
+// client.on('close', () => {
+//     console.log('MQTT: DISCONNECTED')
+// })
 
-client.on('reconnect', () => {
-    console.log('MQTT: TRYING TO RECONNET')
-})
+// client.on('reconnect', () => {
+//     console.log('MQTT: TRYING TO RECONNET')
+// })
 
 exec('sudo chmod 666 /dev/ttyS0')
 
-const serialport = new serialPort('/dev/ttyS0', {
-    baudRate: 9600,
-    autoOpen: false,
-})
+try {
+        const serialport = new serialPort('/dev/ttyS0', {
+            baudRate: 9600,
+            autoOpen: false,
+        })
 
-serialport.open(err => {
-    console.log(err)
-})
+        serialport.open(err => {
+            console.log(err)
+        })
 
-serialport.on('open', () => {
-    console.log('\nRADIO: SERIAL PORT OPEN\n')
-})
+        serialport.on('open', () => {
+            console.log('\nRADIO: SERIAL PORT OPEN\n')
+        })
 
-const parser = serialport.pipe(new Readline({ delimiter: '\n' }))
+        serialport.on('disconnect', function () {
+            console.log('\nRADIO: SERIAL PORT DISCONNECTED')
+            process.exit()
+        })
 
-parser.on('data', data => {
-    try {
-        const dataObject = JSON.parse(data)
-        const { id } = dataObject
-        delete dataObject.id
-        dataObject.rtc = new Date()
+        serialport.on('close', function () {
+            console.log('\nRADIO: SERIAL PORT CLOSED')
+            process.exit()
+        })
 
-        const payload = JSON.stringify(dataObject)
-        console.log(payload)
+        const parser = serialport.pipe(new Readline({ delimiter: '\n' }))
 
-        client.publish(id, payload)
+        parser.on('data', data => {
+            try {
+                const dataObject = JSON.parse(data)
+                const { id } = dataObject
+                delete dataObject.id
+                dataObject.rtc = new Date()
 
-        fs.appendFile('data.txt', `${payload}\n`, err => {
-            console.log(`APPEND FILE ERROR: ${err?.message}`)
+                const payload = JSON.stringify(dataObject)
+                console.log(payload)
+
+                // client.publish(id, payload)
+
+                fs.appendFile('data.txt', `${payload}\n`, err => {
+                    console.log(`APPEND FILE ERROR: ${err?.message}`)
+                })
+
+                serialport.flush()
+            } catch (err) {
+                console.log(err.message)
+            }
         })
     } catch (err) {
+	    exec('sudo chmod 666 /dev/ttyS0')
         console.log(err.message)
     }
-})

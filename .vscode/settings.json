@@ -15,7 +15,7 @@
     "spellright.documentTypes": ["markdown", "latex", "plaintext"],
 
     "[javascript]": {
-        "editor.defaultFormatter": "esbenp.prettier-vscode"
+        "editor.defaultFormatter": "vscode.typescript-language-features"
     },
     "[json]": {
         "editor.defaultFormatter": "vscode.json-language-features"
