@@ -15,7 +15,7 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {
-    "@babel/cli": "^7.8.4",
+    "@babel/cli": "^7.21.0",
     "@babel/core": "^7.9.6",
     "@babel/node": "^7.8.7",
     "@babel/preset-env": "^7.9.6",
@@ -36,7 +36,7 @@
   "dependencies": {
     "child_process": "^1.0.2",
     "dotenv": "^8.2.0",
-    "mqtt": "^4.1.0",
+    "mqtt": "^4.3.7",
     "serialport": "^9.0.0"
   }
 }
